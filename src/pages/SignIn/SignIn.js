@@ -22,33 +22,12 @@ class SignIn extends Component {
 
   handleSubmit = () => {
     const { idValue, pwValue } = this.state;
-    if (idValue) {
-      this.setState({
-        warningId: false,
-      });
-      if (!pwValue) {
-        this.setState({
-          warningPw: true,
-        });
-      } else {
-        this.setState({
-          warningPw: false,
-        });
-      }
-    } else {
-      if (pwValue) {
-        this.setState({
-          warningId: true,
-          warningPw: false,
-        });
-      } else {
-        this.setState({
-          warningId: true,
-          warningPw: false,
-        });
-      }
-    }
+    this.setState({
+      warningId: idValue ? false : true,
+      warningPw: pwValue ? false : true,
+    });
   };
+
   render() {
     const { idValue, pwValue, warningId, warningPw } = this.state;
     return (
@@ -63,7 +42,7 @@ class SignIn extends Component {
             <img className="LoginText" src="images/Login.png" />
           </div>
         </header>
-        <div className="contaienr">
+        <div className="container">
           <input
             type="text"
             className="inputId"
