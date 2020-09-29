@@ -3,7 +3,54 @@ import { Link } from 'react-router-dom';
 import './SignIn.scss';
 
 class SignIn extends Component {
+  constructor() {
+    super();
+    this.state = {
+      idValue: '',
+      pwValue: '',
+      warningId: false,
+      warningPw: false,
+    };
+  }
+
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  handleSubmit = () => {
+    const { idValue, pwValue } = this.state;
+    if (idValue) {
+      this.setState({
+        warningId: false,
+      });
+      if (!pwValue) {
+        this.setState({
+          warningPw: true,
+        });
+      } else {
+        this.setState({
+          warningPw: false,
+        });
+      }
+    } else {
+      if (pwValue) {
+        this.setState({
+          warningId: true,
+          warningPw: false,
+        });
+      } else {
+        this.setState({
+          warningId: true,
+          warningPw: false,
+        });
+      }
+    }
+  };
   render() {
+    const { idValue, pwValue, warningId, warningPw } = this.state;
     return (
       <div className="SignIn">
         <header>
@@ -21,17 +68,34 @@ class SignIn extends Component {
             type="text"
             className="inputId"
             name="idValue"
+            value={idValue}
             placeholder="아이디"
+            onChange={this.handleChange}
           />
-          <div className="warningInputId hidden">아이디를 입력해주세요.</div>
+          <div
+            className={warningId ? 'warningInputId' : 'warningInputId hidden'}
+          >
+            아이디를 입력해주세요.
+          </div>
           <input
             type="text"
             className="inputPw"
             name="pwValue"
+            value={pwValue}
             placeholder="비밀번호"
+            onChange={this.handleChange}
           />
-          <div className="warningInputPw hidden">비밀번호를 입력해주세요.</div>
-          <input type="submit" className="loginBtn" value="로그인" />
+          <div
+            className={warningPw ? 'warningInputPw' : 'warningInputPw hidden'}
+          >
+            비밀번호를 입력해주세요.
+          </div>
+          <input
+            type="submit"
+            className="loginBtn"
+            value="로그인"
+            onClick={this.handleSubmit}
+          />
           <div className="findInfo">
             <p>아이디 찾기</p>
             <span>|</span>
