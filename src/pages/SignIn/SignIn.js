@@ -26,6 +26,24 @@ class SignIn extends Component {
       warningId: idValue ? false : true,
       warningPw: pwValue ? false : true,
     });
+
+    fetch('http://10.58.0.189:8000/user/signin', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: idValue,
+        password: pwValue,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.Authorization) {
+          localStorage.setItem('token', result.Authorization);
+          this.props.history.push('/');
+          alert('로그인완료!');
+        } else if (result.message === 'UNAUTHORIZED') {
+          alert('비밀번호 확인');
+        }
+      });
   };
 
   render() {
@@ -57,7 +75,7 @@ class SignIn extends Component {
             아이디를 입력해주세요.
           </div>
           <input
-            type="text"
+            type="password"
             className="inputPw"
             name="pwValue"
             value={pwValue}
