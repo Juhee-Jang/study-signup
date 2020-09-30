@@ -43,24 +43,57 @@ class SignUp extends Component {
       dateValue,
     } = this.state;
 
-    let num = pwValue.search(/[0-9]/g);
-    let eng = pwValue.search(/[a-z]/gi);
-    let spe = pwValue.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
-    let blank = pwValue.search(/\s/) != -1;
-    const isPwValue =
-      blank &&
-      (pwValue.length < 10 || pwValue.length > 20) &&
-      ((num < 0 && eng < 0) || (eng < 0 && spe < 0) || (spe < 0 && num < 0));
+    // let num = pwValue.search(/[0-9]/g);
+    // let eng = pwValue.search(/[a-z]/gi);
+    // let spe = pwValue.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+    // let blank = pwValue.search(/\s/) != -1;
+    const isPwValue = pwValue.length >= 10 && pwValue.length < 20;
+    // (num < 0 && eng < 0) || (eng < 0 && spe < 0);
 
     this.setState({
       warningEmail: emailValue ? true : false,
       warningName: nameValue ? true : false,
       warningPw: isPwValue ? true : false,
-      warningCheckPw: checkPwValue === pwValue ? true : false,
+      warningCheckPw: checkPwValue && checkPwValue === pwValue ? true : false,
       warningYear: yearValue ? true : false,
-      warningMonth: monthValue ? true : false,
-      warningdate: dateValue === '월' ? true : false,
+      warningMonth: monthValue !== '월' ? true : false,
+      warningdate: dateValue ? true : false,
     });
+  };
+
+  handleSubmit = () => {
+    const {
+      warningEmail,
+      warningName,
+      warningPw,
+      warningCheckPw,
+      warningYear,
+      warningMonth,
+      warningdate,
+    } = this.state;
+
+    if (
+      warningEmail &&
+      warningName &&
+      warningPw &&
+      warningCheckPw &&
+      warningYear &&
+      warningMonth &&
+      warningdate
+    ) {
+      console.log('submit 버튼');
+    } else {
+      console.log('?????');
+      console.log(
+        warningEmail,
+        warningName,
+        warningPw,
+        warningCheckPw,
+        warningYear,
+        warningMonth,
+        warningdate
+      );
+    }
   };
 
   render() {
@@ -82,19 +115,19 @@ class SignUp extends Component {
     } = this.state;
 
     let pwErrorMsg;
-    let num = pwValue.search(/[0-9]/g);
-    let eng = pwValue.search(/[a-z]/gi);
-    let spe = pwValue.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
-    let blank = pwValue.search(/\s/) != -1;
-    if (blank) {
-      pwErrorMsg = '비밀번호는 공백없이 입력해주세요.';
-    }
+    // let num = pwValue.search(/[0-9]/g);
+    // let eng = pwValue.search(/[a-z]/gi);
+    // let spe = pwValue.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+    // let blank = pwValue.search(/\s/) != -1;
+    // if (blank) {
+    //   pwErrorMsg = '비밀번호는 공백없이 입력해주세요.';
+    // }
     if (pwValue.length < 10 || pwValue.length > 20) {
       pwErrorMsg = '10자리 ~ 20자리 이내로 입력해주세요.';
     }
-    if ((num < 0 && eng < 0) || (eng < 0 && spe < 0) || (spe < 0 && num < 0)) {
-      pwErrorMsg = '영문,숫자, 특수문자 중 2가지 이상을 혼합하여 입력해주세요.';
-    }
+    // if ((num < 0 && eng < 0) || (eng < 0 && spe < 0) || (spe < 0 && num < 0)) {
+    //   pwErrorMsg = '영문,숫자, 특수문자 중 2가지 이상을 혼합하여 입력해주세요.';
+    // }
 
     let pwCheckErrorMsg;
     if (!checkPwValue) {
@@ -246,7 +279,12 @@ class SignUp extends Component {
               {dateErrorMsg}
             </div>
           </div>
-          <input type="submit" className="SignUpBtn" value="가입하기" />
+          <input
+            type="submit"
+            className="SignUpBtn"
+            value="가입하기"
+            onClick={this.handleSubmit}
+          />
         </div>
       </div>
     );
