@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './SignUp.scss';
+import { withRouter } from 'react-router-dom';
 
 class SignUp extends Component {
   constructor() {
@@ -19,6 +20,9 @@ class SignUp extends Component {
       yearValue: '',
       monthValue: '월',
       dateValue: '',
+      gender: '중성',
+      email2: 'wecode@wecode.co.kr',
+      number: '01000000000',
     };
   }
 
@@ -43,12 +47,7 @@ class SignUp extends Component {
       dateValue,
     } = this.state;
 
-    // let num = pwValue.search(/[0-9]/g);
-    // let eng = pwValue.search(/[a-z]/gi);
-    // let spe = pwValue.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
-    // let blank = pwValue.search(/\s/) != -1;
     const isPwValue = pwValue.length >= 10 && pwValue.length < 20;
-    // (num < 0 && eng < 0) || (eng < 0 && spe < 0);
 
     this.setState({
       warningEmail: emailValue ? true : false,
@@ -64,35 +63,53 @@ class SignUp extends Component {
   handleSubmit = () => {
     const {
       warningEmail,
-      warningName,
       warningPw,
       warningCheckPw,
+      warningName,
       warningYear,
       warningMonth,
       warningdate,
+      emailValue,
+      pwValue,
+      nameValue,
+      yearValue,
+      monthValue,
+      dateValue,
+      gender,
+      email2,
+      number,
     } = this.state;
 
     if (
       warningEmail &&
-      warningName &&
       warningPw &&
       warningCheckPw &&
+      warningName &&
       warningYear &&
       warningMonth &&
       warningdate
     ) {
-      console.log('submit 버튼');
-    } else {
-      console.log('?????');
-      console.log(
-        warningEmail,
-        warningName,
-        warningPw,
-        warningCheckPw,
-        warningYear,
-        warningMonth,
-        warningdate
-      );
+      fetch('http://10.58.0.189:8000/user/signup', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: emailValue,
+          password: pwValue,
+          name: nameValue,
+          year: yearValue,
+          month: monthValue,
+          day: dateValue,
+          gender: gender,
+          email2: email2,
+          number: number,
+        }),
+      }).then((res) => {
+        if (res.status === 400) {
+          alert('다시 한 번 확인해주세요!');
+        } else {
+          alert('가입 완료 !');
+          this.props.history.push('/');
+        }
+      });
     }
   };
 
@@ -115,19 +132,9 @@ class SignUp extends Component {
     } = this.state;
 
     let pwErrorMsg;
-    // let num = pwValue.search(/[0-9]/g);
-    // let eng = pwValue.search(/[a-z]/gi);
-    // let spe = pwValue.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
-    // let blank = pwValue.search(/\s/) != -1;
-    // if (blank) {
-    //   pwErrorMsg = '비밀번호는 공백없이 입력해주세요.';
-    // }
     if (pwValue.length < 10 || pwValue.length > 20) {
       pwErrorMsg = '10자리 ~ 20자리 이내로 입력해주세요.';
     }
-    // if ((num < 0 && eng < 0) || (eng < 0 && spe < 0) || (spe < 0 && num < 0)) {
-    //   pwErrorMsg = '영문,숫자, 특수문자 중 2가지 이상을 혼합하여 입력해주세요.';
-    // }
 
     let pwCheckErrorMsg;
     if (!checkPwValue) {
@@ -291,4 +298,4 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp;
+export default withRouter(SignUp);
